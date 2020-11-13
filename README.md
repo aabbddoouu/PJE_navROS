@@ -84,7 +84,7 @@ rosrun map_server map_saver -f ($ map_name)
   </xacro:if>
 ```
 
-### Merge 2scans into 1 w/ ira_laser_tools 
+### Merge 2scans into 1 w/ [ira_laser_tools](https://github.com/iralabdisco/ira_laser_tools)
 
 roslaunch ira_laser_tools laserscan_multi_merger.launch 
 
