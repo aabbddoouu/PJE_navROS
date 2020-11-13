@@ -6,6 +6,9 @@ In this 1st iteration, we are using the Husky (see [Husky github page](https://g
 - Karto Slam
 
 
+The bash script **script.sh** automates the latter commands.
+Make sure to set it as an executable to run it.
+
 
 ## Launch gazebo
 roslaunch husky_gazebo husky_playpen.launch ur5_enabled:=false laser_enabled:=true
@@ -118,10 +121,12 @@ roslaunch ira_laser_tools laserscan_multi_merger.launch
   - cause : old version with a wrong commit : [Github issue](https://github.com/ros-planning/navigation/issues/959)
   - solution : update to new version 
 
-- Hector Slam *teleports* map when walking in a straight corridor (same map)
+- Hector Slam *teleports* the map when walking in a straight corridor (parallel walls)
   - cause : ??? maybe it doesn't use odometry ? But the fram odom is passed as an argument when calling the node ...
   - solution : ???
 
-- When turning (slow and no linear speed), Karto slam sometimes shifts the map *
-  - cause : odometry ?? But gmapping uses odometry and doesnt suffer from this problem (or as much)
+- When turning (slow turn and no linear speed), Karto slam sometimes shifts the map
+  - cause : 
+    - odometry ?? But gmapping uses odometry and doesnt suffer from this problem (or as much)
+    - Loop enclosing ?
   - solution : ???
