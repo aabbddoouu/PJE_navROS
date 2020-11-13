@@ -90,7 +90,7 @@ roslaunch ira_laser_tools laserscan_multi_merger.launch
 
 
 ## Control robot with xbox controller
-# Commands
+### Commands
  
 - sudo xboxdrv --device-by-id 2f24:0091 --type xbox360 --device-name 'EasySMX-9101' --silent
     - it opens a serial port for the controller : typ. **/dev/input/js1**
@@ -101,12 +101,13 @@ roslaunch ira_laser_tools laserscan_multi_merger.launch
     - convert controller data (**Joy.msg**) to **Twist.msg** and publishes it to the topic **/cmd_vel**
 
 
-# Troubleshooting 
+### Troubleshooting 
 
 - rostopic echo /teleop_velocity_smooer/raw_cmd_vel
     - Check if the turtlebot_teleop is working
 - rostopic echo joy
     - Check if ros is receiving controller data
+
 
 # Bugs/Problems
 - the merged scan goes beyond laser range defined in robot description
