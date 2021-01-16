@@ -1,5 +1,7 @@
 # PJE_navROS
 Source files for PJE09 navROS.
+The main branch (kinetic) contains the whole directory. See the 2nd branch for changed files only.
+
 In this 1st iteration, we are using the Husky (see [Husky github page](https://github.com/husky/husky)) robot to conduct our comparative study of 3 SLAM Methods :
 - Gmapping
 - Hector slam
