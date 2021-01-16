@@ -1,15 +1,3 @@
-# PJE_navROS
-Source files for PJE09 navROS.
-In this 1st iteration, we are using the Husky (see [Husky github page](https://github.com/husky/husky)) robot to conduct our comparative study of 3 SLAM Methods :
-- Gmapping
-- Hector slam
-- Karto Slam
-
-
-The bash script **script.sh** automates the latter commands.
-Make sure to set it as an executable to run it.
-
-
 ## Launch gazebo
 roslaunch husky_gazebo husky_playpen.launch ur5_enabled:=false laser_enabled:=true
 
@@ -20,7 +8,7 @@ roslaunch husky_gazebo husky_playpen.launch ur5_enabled:=false laser_enabled:=tr
 - roslaunch husky_navigation hector_demo.launch
 
 
-- roslaunch husky_navigation karto_slam.launch  [Version used](https://github.com/nkuwenjian/slam_karto)
+- roslaunch husky_navigation karto_slam.launch  [Version used](https://github.com/nkuwenjian/slam_karto)  ()
 
 
  
@@ -87,13 +75,13 @@ rosrun map_server map_saver -f ($ map_name)
   </xacro:if>
 ```
 
-### Merge 2scans into 1 w/ [ira_laser_tools](https://github.com/iralabdisco/ira_laser_tools)
+### Merge 2scans into 1 w/ ira_laser_tools 
 
 roslaunch ira_laser_tools laserscan_multi_merger.launch 
 
 
 ## Control robot with xbox controller
-### Commands
+# Commands
  
 - sudo xboxdrv --device-by-id 2f24:0091 --type xbox360 --device-name 'EasySMX-9101' --silent
     - it opens a serial port for the controller : typ. **/dev/input/js1**
@@ -101,32 +89,50 @@ roslaunch ira_laser_tools laserscan_multi_merger.launch
 - bring up the robot
 - rosparam set /joystick/dev "/dev/input/js1"
 - roslaunch teleop_twist_joy teleop.launch
-    - convert controller data (**Joy.msg**) to **Twist.msg** and publishes it to the topic **/cmd_vel**
+    - service that converts controller data (**Joy.msg**) to **Twist.msg** and publishes it to the topic **/cmd_vel**
 
 
-### Troubleshooting 
+# Troubleshooting 
 
 - rostopic echo /teleop_velocity_smooer/raw_cmd_vel
     - Check if the turtlebot_teleop is working
 - rostopic echo joy
     - Check if ros is receiving controller data
 
-
 # Bugs/Problems
 - the merged scan goes beyond laser range defined in robot description
   - cause : 'inf' scanned points gets reduced to *range_max* +1 defined in laser\_scan\_multi\_merger
   - solution : set *range_max* to 9.0 and set scan max distance in each SLAM method to 8.1 (>8.0)
 
+- Karto's Karto node (Karto.cpp) has a problem in its "Validate" function when merging scans :
+  - cause : GetNumberOfRangeReadings() is off by 1  
+  - solution :
+  ```
+    kt_bool LaserRangeFinder::Validate(SensorData* pSensorData)
+  {
+    LaserRangeScan* pLaserRangeScan = dynamic_cast<LaserRangeScan*>(pSensorData);
+
+    // verify number of range readings in LaserRangeScan matches the number of expected range readings
+    if (abs(pLaserRangeScan->GetNumberOfRangeReadings() - GetNumberOfRangeReadings())<=1){
+      return true;
+    }
+    /*Old code 
+    if (pLaserRangeScan->GetNumberOfRangeReadings() != GetNumberOfRangeReadings())
+    {
+      std::cout << "LaserRangeScan contains " << pLaserRangeScan->GetNumberOfRangeReadings()
+                << " range readings, expected " << GetNumberOfRangeReadings() << std::endl;
+      return false;
+    }
+    */
+  ```
 - Global cost map does "du n'importe quoi" when it is resized 
   - cause : old version with a wrong commit : [Github issue](https://github.com/ros-planning/navigation/issues/959)
   - solution : update to new version 
 
-- Hector Slam *teleports* the map when walking in a straight corridor (parallel walls)
+- Hector Slam *teleports* map when walking in a straight corridor (myworld)
   - cause : ??? maybe it doesn't use odometry ? But the fram odom is passed as an argument when calling the node ...
   - solution : ???
 
-- When turning (slow turn and no linear speed), Karto slam sometimes shifts the map
-  - cause : 
-    - odometry ?? But gmapping uses odometry and doesnt suffer from this problem (or as much)
-    - Loop enclosing ?
+- When turning (slow and no linear speed), Karto slam (with loop closing enabled) sometimes shifts the map *
+  - cause : odometry ?? But gmapping uses odometry and doesnt suffer from this problem (or as much)
   - solution : ???
