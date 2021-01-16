@@ -1,3 +1,13 @@
+# PJE_navROS
+Source files for PJE09 navROS.
+In this 1st iteration, we are using the Husky (see [Husky github page](https://github.com/husky/husky)) robot to conduct our comparative study of 3 SLAM Methods :
+- Gmapping
+- Hector slam
+- Karto Slam
+
+The bash script **script.sh** automates the latter commands.
+Make sure to set it as an executable to run it.
+
 ## Launch gazebo
 roslaunch husky_gazebo husky_playpen.launch ur5_enabled:=false laser_enabled:=true
 
